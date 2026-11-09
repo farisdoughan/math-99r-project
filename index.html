@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Edge Lab · Math 99R</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<header><a class="brand" href="./">EDGE LAB <span>/ MATH 99R</span></a><span>A pixel-by-pixel experiment</span></header>
+<main>
+<section class="intro"><p class="eyebrow">THE MATHEMATICS OF EDGE DETECTION</p><h1>Watch an edge take shape.</h1><p>Move a small matrix across an image. Multiply, add, and see which changes become edges.</p></section>
+<section class="toolbar" aria-label="Experiment controls">
+<label class="upload">Upload image<input id="upload" type="file" accept="image/*"></label>
+<button id="sample">Use example</button>
+<label>Operator<select id="operator"><option value="magnitude">Sobel · gradient magnitude</option><option value="x">Sobel · horizontal change Sₓ</option><option value="y">Sobel · vertical change Sᵧ</option><option value="central">Central difference · Kₓ</option></select></label>
+<label>Image width<select id="resolution"><option value="24">24 pixels</option><option value="48" selected>48 pixels</option><option value="96">96 pixels</option><option value="160">160 pixels</option></select></label>
+<p id="fileStatus" role="status">Example image · processed entirely in your browser</p>
+</section>
+<div class="workspace">
+<section class="image-panel"><div class="section-heading"><h2>01 <span>Input intensity</span></h2><span id="dimensions"></span></div><div class="canvas-wrap"><canvas id="input" aria-label="Grayscale image. Click a pixel to inspect its neighborhood."></canvas></div><p>Click the image to jump to a pixel. The amber window shows the active neighborhood.</p></section>
+<section class="image-panel"><div class="section-heading"><h2>02 <span>Operator response</span></h2><span id="position"></span></div><div class="canvas-wrap"><canvas id="output" aria-label="Edge response revealed in scan order"></canvas></div><p id="outputCaption">Unvisited pixels are dark blue. Brighter pixels indicate stronger responses.</p></section>
+</div>
+<section class="playback" aria-label="Scan playback"><div class="buttons"><button id="reset" title="Restart scan">Restart</button><button id="back" aria-label="Previous pixel">←</button><button id="play" class="primary">Play scan</button><button id="step" aria-label="Next pixel">Step →</button><button id="finish">Show result</button></div><label class="speed">Speed <select id="speed"><option value="2">2 pixels / sec</option><option value="15" selected>15 pixels / sec</option><option value="120">120 pixels / sec</option><option value="2000">2,000 pixels / sec</option></select></label><label class="scrub"><span id="progressLabel">Scan progress</span><input id="scrub" aria-label="Scan progress" type="range" min="0" max="1" value="0"></label></section>
+<section class="calculation"><div><p class="eyebrow">AT THE CURRENT PIXEL</p><h2>Multiply each pair. Add the products.</h2><p id="mathIntro"></p></div><div id="calculations"></div><div id="result" aria-live="polite"></div></section>
+<details><summary>What exactly is being calculated?</summary><p>The image is resized while preserving its aspect ratio, then converted to grayscale using 0.2126R + 0.7152G + 0.0722B, rounded to integers from 0 to 255. Transparent pixels are composited over white. Coordinates are zero-based: x increases to the right and y increases downward.</p><p>The scan includes every pixel, row by row, from top left to bottom right. At image boundaries, the nearest edge pixel is repeated (replicate padding). The shown matrices are applied directly, without flipping: technically this is cross-correlation, a common convention for these operators.</p><p>Sobel responses are raw weighted sums. For display, magnitude is scaled against the largest magnitude in this image. Signed responses use a diverging scale: blue is negative, white is zero, and orange is positive; brightness alone does not encode their magnitude. The calculation always shows unscaled values. No thresholding, thinning, or Gaussian preprocessing is applied.</p></details>
+<footer>Foundations and Advancements in Edge Detection <span>Faris Doughan · Math 99R</span></footer>
+</main><script type="module" src="app.js"></script>
+</body></html>

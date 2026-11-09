@@ -1,2 +1,32 @@
-# math-99r-project
-Interactive edge detection demo for Math 99R: watch Sobel operators act on an uploaded image, pixel by pixel.
+# Math 99R Project · Edge Lab
+
+An interactive, browser-only demonstration of discrete edge detection. Upload an image and watch a kernel scan every pixel from top left to bottom right. The current neighborhood, kernel coefficients, products, signed sums, and gradient magnitude are shown together.
+
+## Run locally
+
+With Node.js installed:
+
+```sh
+npm start
+```
+
+Open http://127.0.0.1:4173. No dependency installation is needed. A static web server also works; the app can be hosted on GitHub Pages. ES modules require HTTP rather than opening index.html with a file URL.
+
+## Controls
+
+- Upload a PNG, JPEG, WebP, or another browser-supported image, or use the built-in example.
+- Choose Sobel magnitude, signed horizontal/vertical Sobel responses, or central horizontal differences.
+- Play/pause, step forward/back, restart, scrub, click a source pixel, or reveal the complete result.
+- Adjust scan speed and working image width. Images are resized for legible classroom demonstrations. Very tall images are capped at 240 rows.
+
+## Mathematical conventions
+
+Grayscale intensities are rounded from `0.2126R + 0.7152G + 0.0722B`; alpha is composited over white. Unit pixel spacing is used. Sobel kernels are unnormalized; the central difference includes its factor of 1/2. Coordinates are zero-based, x rightward, y downward. Nearest-value replicate padding keeps the output dimensions equal to the input. Kernels are applied without flipping (cross-correlation).
+
+Magnitude display is scaled by the image's maximum magnitude. Signed displays use negative blue, neutral white, and positive orange. Display scaling does not affect reported numerical responses. The selected pixel is included in the revealed scan; the initial state displays the first calculation. This is an operator demonstration, not a complete Canny detector: there is no additional blur, thinning, or thresholding.
+
+## Privacy and tests
+
+Image processing happens locally in the browser. No uploads, external APIs, analytics, or external fonts are used. Run `npm test` for numerical operator tests.
+
+Faris Doughan · Math 99R: Mathematics of Visualization

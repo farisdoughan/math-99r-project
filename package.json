@@ -1,0 +1,1 @@
+{"name":"math-99r-project","version":"1.0.0","private":true,"type":"module","scripts":{"test":"node core.test.js","start":"node server.js"}}

@@ -4,27 +4,27 @@
 <body>
 <header><a class="brand" href="./">Edge detection</a><span>Math 99R</span></header>
 <main>
-<section class="intro"><h1>Edge detection</h1><p>See how a kernel works on your image, one pixel at a time.</p></section>
+<section class="intro"><h1>Edge detection</h1></section>
 <section class="upload-area" aria-label="Choose an image">
 <label class="upload">Select image<input id="upload" type="file" accept="image/*"></label>
 <button id="sample" class="text-button">or try an example</button>
-<p id="fileStatus" role="status">PNG, JPG, WebP · Images stay on your device</p>
+<p id="fileStatus" role="status"></p>
 </section>
 <div id="editor" hidden>
 <section class="toolbar" aria-label="Image settings">
 <label>Operator<select id="operator"><option value="magnitude">Sobel magnitude</option><option value="x">Sobel X</option><option value="y">Sobel Y</option><option value="central">Central difference X</option></select></label>
-<label>Image width<select id="resolution"><option value="24">24 px</option><option value="48" selected>48 px</option><option value="96">96 px</option><option value="160">160 px</option></select></label>
-<span class="hint">Click a pixel to inspect it</span>
+<label>Resolution<select id="resolution"><option value="48">48 px</option><option value="96">96 px</option><option value="192" selected>192 px</option><option value="384">384 px</option><option value="768">768 px</option><option value="1024">1,024 px</option></select></label>
+
 </section>
 <div class="workspace">
 <section class="image-panel"><div class="section-heading"><h2>Original</h2><span id="dimensions"></span></div><div class="canvas-wrap"><canvas id="input" aria-label="Grayscale image. Click a pixel to inspect its neighborhood."></canvas></div></section>
 <section class="image-panel"><div class="section-heading"><h2>Result</h2><span id="position"></span></div><div class="canvas-wrap"><canvas id="output" aria-label="Edge response revealed in scan order"></canvas></div></section>
 </div>
-<section class="playback" aria-label="Scan playback"><div class="buttons"><button id="play" class="primary">Play</button><button id="back" aria-label="Previous pixel">←</button><button id="step" aria-label="Next pixel">Step →</button><button id="reset">Reset</button><button id="finish">Show result</button></div><label class="speed">Speed<select id="speed"><option value="2">2 px/s</option><option value="15" selected>15 px/s</option><option value="120">120 px/s</option><option value="2000">2,000 px/s</option></select></label><label class="scrub"><input id="scrub" aria-label="Scan progress" type="range" min="0" max="1" value="0"><span id="progressLabel">Scan progress</span></label></section>
-<p id="outputCaption" class="caption"></p>
-<details class="calculation" open><summary>Pixel calculation</summary><p id="mathIntro"></p><div id="calculations"></div><div id="result" aria-live="polite"></div></details>
-<details class="method"><summary>How it works</summary><p>The image is resized, then converted to grayscale using 0.2126R + 0.7152G + 0.0722B, rounded to integers from 0 to 255. Transparent pixels are placed over white. Coordinates start at zero: x goes right and y goes down.</p><p>The kernel visits every pixel, left to right, one row at a time. At the borders, the nearest pixel is repeated. Kernels are applied without flipping (cross-correlation). Sobel uses raw weighted sums; the central difference includes a factor of ½ with unit pixel spacing.</p><p>Magnitude is displayed relative to the largest value in the image. Signed responses are blue for negative, white for zero, and orange for positive. Numerical calculations show the original values. No extra smoothing, thresholding, or thinning is applied.</p></details>
+<section class="playback" aria-label="Scan playback"><div class="buttons"><button id="play" class="primary">Play</button><button id="back" aria-label="Previous pixel">←</button><button id="step" aria-label="Next pixel">Step →</button><button id="reset">Reset</button><button id="finish">Show result</button></div><label class="speed">Speed<select id="speed"><option value="2">2 px/s</option><option value="15" selected>15 px/s</option><option value="120">120 px/s</option><option value="2000">2,000 px/s</option><option value="20000">20,000 px/s</option><option value="100000">100,000 px/s</option></select></label><label class="scrub"><input id="scrub" aria-label="Scan progress" type="range" min="0" max="1" value="0"><span id="progressLabel">Scan progress</span></label></section>
+
+<details class="calculation" open><summary>Pixel calculation</summary><div id="calculations"></div><div id="result" aria-live="polite"></div></details>
+
 </div>
-<footer>Faris Doughan · Math 99R</footer>
+
 </main><script type="module" src="app.js"></script>
 </body></html>

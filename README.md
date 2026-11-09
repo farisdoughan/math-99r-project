@@ -17,7 +17,7 @@ Open http://127.0.0.1:4173. No dependency installation is needed. A static web s
 - Upload a PNG, JPEG, WebP, or another browser-supported image, or use the built-in example.
 - Choose Sobel magnitude, signed horizontal/vertical Sobel responses, or central horizontal differences.
 - Play/pause, step forward/back, restart, scrub, click a source pixel, or reveal the complete result.
-- Adjust scan speed and working image width. Images are resized for legible classroom demonstrations. Very tall images are capped at 240 rows.
+- Adjust scan speed and working image width. Images are resized for legible classroom demonstrations. Choose 48, 96, 192, 384, 768, or 1,024 pixels in width (192 by default). Very tall images are scaled proportionally to at most 1,024 rows. Grayscale and response images are cached so playback does not recompute every pixel on each frame.
 
 ## Mathematical conventions
 

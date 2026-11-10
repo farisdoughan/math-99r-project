@@ -5,3 +5,15 @@
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
 
 .has-image .intro{display:none}.has-image .upload-area{padding:18px 0}.has-image #fileStatus{flex-basis:auto;margin-left:8px}.has-image #sample{font-size:13px}@media(max-width:600px){.has-image #fileStatus{flex-basis:100%;margin-left:0;text-align:center}}
+
+/* Parameter sliders and mode description */
+.sliders{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 24px;padding:0 0 12px}
+.sliders label{display:flex;flex-direction:column;gap:4px;font-size:14px}
+.sliders label[hidden]{display:none}
+.sliders output{font:12px Consolas,monospace;color:var(--muted)}
+.sliders input{accent-color:var(--accent);width:100%}
+.mode-info{font-size:13px;color:var(--muted);margin:0 0 16px}
+select:disabled{opacity:.5;cursor:default}
+.toolbar{flex-wrap:wrap}
+.matrix{grid-template-columns:repeat(3,54px)}
+@media(max-width:600px){.matrix{grid-template-columns:repeat(3,38px)}.cell{font-size:9px}}

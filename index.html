@@ -1,30 +1,103 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Edge detection · Math 99R</title><link rel="stylesheet" href="style.css"></head>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Edge detection · Math 99R</title>
+<link rel="stylesheet" href="style.css">
+</head>
 <body>
 <header><a class="brand" href="./">Edge detection</a><span>Math 99R</span></header>
 <main>
 <section class="intro"><h1>Edge detection</h1></section>
 <section class="upload-area" aria-label="Choose an image">
-<label class="upload">Select image<input id="upload" type="file" accept="image/*"></label>
-<button id="sample" class="text-button">or try an example</button>
-<p id="fileStatus" role="status"></p>
+  <label class="upload">Select image<input id="upload" type="file" accept="image/*"></label>
+  <button id="sample" class="text-button">or try an example</button>
+  <p id="fileStatus" role="status"></p>
 </section>
+
 <div id="editor" hidden>
-<section class="toolbar" aria-label="Image settings">
-<label>Operator<select id="operator"><option value="magnitude">Sobel magnitude</option><option value="x">Sobel X</option><option value="y">Sobel Y</option><option value="central">Central difference X</option></select></label>
-<label>Resolution<select id="resolution"><option value="48">48 px</option><option value="96">96 px</option><option value="192" selected>192 px</option><option value="384">384 px</option><option value="768">768 px</option><option value="1024">1,024 px</option></select></label>
+  <section class="toolbar" aria-label="Method">
+    <label>Operator
+      <select id="operator">
+        <optgroup label="Gradient">
+          <option value="magnitude">Sobel magnitude</option>
+          <option value="x">Sobel X</option>
+          <option value="y">Sobel Y</option>
+          <option value="central">Central difference X</option>
+        </optgroup>
+        <optgroup label="Second order">
+          <option value="log">Laplacian of Gaussian (LoG)</option>
+          <option value="dog">Difference of Gaussians (DoG)</option>
+        </optgroup>
+        <optgroup label="Smoothing">
+          <option value="smooth">Gaussian smoothing only</option>
+        </optgroup>
+      </select>
+    </label>
+    <label>Show
+      <select id="view">
+        <option value="response">Filter response</option>
+        <option value="edges">Binary edge map</option>
+      </select>
+    </label>
+    <label>Resolution
+      <select id="resolution">
+        <option value="48">48 px</option><option value="96">96 px</option>
+        <option value="192" selected>192 px</option><option value="384">384 px</option>
+        <option value="768">768 px</option><option value="1024">1,024 px</option>
+      </select>
+    </label>
+  </section>
 
-</section>
-<div class="workspace">
-<section class="image-panel"><div class="section-heading"><h2>Original</h2><span id="dimensions"></span></div><div class="canvas-wrap"><canvas id="input" aria-label="Grayscale image. Click a pixel to inspect its neighborhood."></canvas></div></section>
-<section class="image-panel"><div class="section-heading"><h2>Result</h2><span id="position"></span></div><div class="canvas-wrap"><canvas id="output" aria-label="Edge response revealed in scan order"></canvas></div></section>
+  <section class="sliders" aria-label="Parameters">
+    <label>Smoothing σ <output id="sigmaValue"></output>
+      <input id="sigma" type="range" min="0" max="4" step="0.25" value="1"></label>
+    <label id="kLabel">Scale ratio k <output id="kValue"></output>
+      <input id="kfactor" type="range" min="1.1" max="2.5" step="0.1" value="1.6"></label>
+    <label>Added noise <output id="noiseValue"></output>
+      <input id="noise" type="range" min="0" max="60" step="1" value="0"></label>
+    <label id="thresholdLabel">Edge threshold <output id="thresholdValue"></output>
+      <input id="threshold" type="range" min="0" max="100" step="1" value="20"></label>
+  </section>
+  <p id="modeInfo" class="mode-info"></p>
+
+  <div class="workspace">
+    <section class="image-panel">
+      <div class="section-heading"><h2>Original (with noise)</h2><span id="dimensions"></span></div>
+      <div class="canvas-wrap"><canvas id="input" aria-label="Grayscale image. Click a pixel to inspect its neighborhood."></canvas></div>
+    </section>
+    <section class="image-panel">
+      <div class="section-heading"><h2 id="resultTitle">Response</h2><span id="position"></span></div>
+      <div class="canvas-wrap"><canvas id="output" aria-label="Result revealed in scan order"></canvas></div>
+    </section>
+  </div>
+
+  <section class="playback" aria-label="Scan playback">
+    <div class="buttons">
+      <button id="play" class="primary">Play</button>
+      <button id="back" aria-label="Previous pixel">←</button>
+      <button id="step" aria-label="Next pixel">Step →</button>
+      <button id="reset">Reset</button>
+      <button id="finish">Show result</button>
+    </div>
+    <label class="speed">Speed
+      <select id="speed">
+        <option value="2">2 px/s</option><option value="15" selected>15 px/s</option>
+        <option value="120">120 px/s</option><option value="2000">2,000 px/s</option>
+        <option value="20000">20,000 px/s</option><option value="100000">100,000 px/s</option>
+      </select>
+    </label>
+    <label class="scrub"><input id="scrub" aria-label="Scan progress" type="range" min="0" max="1" value="0"><span id="progressLabel">Scan progress</span></label>
+  </section>
+
+  <details class="calculation" open>
+    <summary>Pixel calculation</summary>
+    <div id="calculations"></div>
+    <div id="result" aria-live="polite"></div>
+  </details>
 </div>
-<section class="playback" aria-label="Scan playback"><div class="buttons"><button id="play" class="primary">Play</button><button id="back" aria-label="Previous pixel">←</button><button id="step" aria-label="Next pixel">Step →</button><button id="reset">Reset</button><button id="finish">Show result</button></div><label class="speed">Speed<select id="speed"><option value="2">2 px/s</option><option value="15" selected>15 px/s</option><option value="120">120 px/s</option><option value="2000">2,000 px/s</option><option value="20000">20,000 px/s</option><option value="100000">100,000 px/s</option></select></label><label class="scrub"><input id="scrub" aria-label="Scan progress" type="range" min="0" max="1" value="0"><span id="progressLabel">Scan progress</span></label></section>
-
-<details class="calculation" open><summary>Pixel calculation</summary><div id="calculations"></div><div id="result" aria-live="polite"></div></details>
-
-</div>
-
-</main><script type="module" src="app.js"></script>
-</body></html>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>
